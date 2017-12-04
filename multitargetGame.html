@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script>
+
+
+
+var timer;
+var count;
+var numCircles = 10;
+var currentCircleCount = -1;
+var circlearray = [];
+
+// 1 in 25 times we will get another circle
+var circleProb = 1;
+
+function startGame() 
+{
+    myGameArea.start();
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+      
+        
+       
+       count = 0;
+       timer = 0;
+     
+        this.canvas.width = 680;
+        this.canvas.height = 440;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas,         document.body.childNodes[0]);
+      this.interval = setInterval(updateGameArea, 20);
+       
+        },
+    clear : function() {
+        this.context.beginPath();
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+function circle(circleposition)
+{
+  this.growing = true;
+  this.startX = 50+ Math.random() * 580;
+  this.startY =50 + Math.random() * 340;
+  this.radius = 0;
+  this.remove = false;
+this.increment = function()
+{
+  this.radius = this.radius + 1;
+  if(this.radius >= 50)
+  {
+    this.growing = false;
+  }
+}
+this.decrement = function()
+{
+  this.radius = this.radius - 1;
+  if(this.radius == 0)
+  {
+    this.remove = true;
+  }
+}
+this.update = function()
+{
+   if(this.growing == false)
+   {
+    this.decrement();
+   }
+   else if (this.growing == true)
+   {
+    this.increment();
+   } 
+   else
+   {
+
+   }
+}
+
+}
+
+
+
+
+function updateGameArea() {
+    count++;
+    myGameArea.clear();
+ 
+    GenTime = Math.floor((Math.random() * 100) + 1);
+    //console.log(GenTime);
+    if(circleProb >= GenTime)
+    {
+      currentCircleCount++;
+      circlearray.push(new circle(currentCircleCount));
+      console.log(circlearray);
+    }
+  var toremove = [];
+ 	for(i = 0; i <currentCircleCount; i++)
+    {
+        if(circlearray[i] == null)
+        {
+          continue;
+        }
+      if(circlearray[i].remove == true)
+      {
+        if(circlearray[i] != null)
+        {
+        circlearray.pop(circlearray[i]);
+        }
+        continue;
+      }
+
+		  myGameArea.context.beginPath();
+   		myGameArea.context.arc(circlearray[i].startX, circlearray[i].startY, circlearray[i].radius, 0, 2 * Math.PI,true);
+      myGameArea.context.stroke();
+      circlearray[i].update();
+
+    }
+	//myGameArea.context.stroke();
+	
+    
+   	
+}
+
+
+
+
+
+</script>
+</body>
+</html>
+
